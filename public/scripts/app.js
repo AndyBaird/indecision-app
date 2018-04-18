@@ -10,39 +10,74 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 
 console.log("App.js is running");
 
-var obj = {
-    name: 'name',
-    getName: function getName() {
-        return this.name;
-    }
-};
+// const obj = {
+//     name: 'name',
+//     getName(){
+//         return this.name;
+//     }   
+// };
 
-var getName = obj.getName;
+//you lose 'this' context when used in functions or event handlers, therefore you must rebind like so
+//const getName = obj.getName.bind(obj);
+// const getName = obj.getName.bind({name: 'Andrew'});
 
-console.log(getName());
 
 var IndecisionApp = function (_React$Component) {
     _inherits(IndecisionApp, _React$Component);
 
-    function IndecisionApp() {
+    function IndecisionApp(props) {
         _classCallCheck(this, IndecisionApp);
 
-        return _possibleConstructorReturn(this, (IndecisionApp.__proto__ || Object.getPrototypeOf(IndecisionApp)).apply(this, arguments));
+        var _this = _possibleConstructorReturn(this, (IndecisionApp.__proto__ || Object.getPrototypeOf(IndecisionApp)).call(this, props));
+
+        _this.handleDeleteOptions = _this.handleDeleteOptions.bind(_this);
+        _this.handlePick = _this.handlePick.bind(_this);
+        _this.state = {
+            options: ['thing one', 'thing two', 'thing three']
+        };
+        return _this;
     }
 
     _createClass(IndecisionApp, [{
+        key: 'handleDeleteOptions',
+        value: function handleDeleteOptions() {
+            this.setState(function () {
+                return {
+                    options: []
+                };
+            });
+        }
+    }, {
+        key: 'handlePick',
+        value: function handlePick() {
+            var randomNum = Math.floor(Math.random() * this.state.options.length);
+            var option = this.state.options[randomNum];
+            alert(option);
+            // this.setState(() =>{
+
+            //     // return (
+
+            //     // )
+            // });
+        }
+    }, {
         key: 'render',
         value: function render() {
             var title = 'Indecision';
             var subtitle = 'Put your life in the hands of a computer';
-            var options = ['thing one', 'thing two', 'thing four'];
 
             return React.createElement(
                 'div',
                 null,
                 React.createElement(Header, { title: title, subtitle: subtitle }),
-                React.createElement(Action, null),
-                React.createElement(Options, { options: options }),
+                React.createElement(Action, {
+                    hasOptions: this.state.options.length > 0,
+                    handlePick: this.handlePick
+                }),
+                React.createElement(Options, {
+                    options: this.state.options,
+                    handleDeleteOptions: this.handleDeleteOptions
+                }),
                 React.createElement(AddOption, null)
             );
         }
@@ -93,11 +128,6 @@ var Action = function (_React$Component3) {
     }
 
     _createClass(Action, [{
-        key: 'handlePick',
-        value: function handlePick() {
-            alert("test");
-        }
-    }, {
         key: 'render',
         value: function render() {
             return React.createElement(
@@ -105,8 +135,10 @@ var Action = function (_React$Component3) {
                 null,
                 React.createElement(
                     'button',
-                    { onClick: this.handlePick },
-                    'What Should I Do? '
+                    {
+                        onClick: this.props.handlePick,
+                        disabled: !this.props.hasOptions },
+                    'What Should I Do?'
                 )
             );
         }
@@ -125,12 +157,16 @@ var Options = function (_React$Component4) {
     }
 
     _createClass(Options, [{
-        key: 'handleRemoveAll',
-        value: function handleRemoveAll() {
-            alert("remove all");
-        }
-    }, {
         key: 'render',
+
+        //overriding the constructor to fix binding
+        // constructor(props){
+        //     //must use props as first arg
+        //     super(props);
+        //     //fixes binding within class for all calls
+        //     this.handleRemoveAll = this.handleRemoveAll.bind(this);
+        // }
+
         value: function render() {
             console.log(this.props);
             return React.createElement(
@@ -138,7 +174,7 @@ var Options = function (_React$Component4) {
                 null,
                 React.createElement(
                     'button',
-                    { onClick: this.handleRemoveAll },
+                    { onClick: this.props.handleDeleteOptions },
                     'Remove All'
                 ),
 
