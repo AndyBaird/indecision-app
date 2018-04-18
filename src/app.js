@@ -1,4 +1,17 @@
 console.log("App.js is running");
+
+
+const obj = {
+    name: 'name',
+    getName(){
+        return this.name;
+    }    
+};
+
+const getName = obj.getName;
+
+console.log(getName());
+
 class IndecisionApp extends React.Component {
     render(){
         const title = 'Indecision';
@@ -29,21 +42,28 @@ class Header extends React.Component {
 }
 
 class Action extends React.Component {
+    handlePick(){
+        alert("test");
+    }
     render(){
         return (
             <div>
-                <button>What Should I Do? </button>
+                <button onClick={this.handlePick}>What Should I Do? </button>
             </div>
         );
     }
 }
 
 class Options extends React.Component {
+    handleRemoveAll(){
+        alert("remove all");
+    }
     render(){
         console.log(this.props);
         return (
-            <div>                
-                {
+            <div>
+                <button onClick={this.handleRemoveAll}>Remove All</button>
+                {                    
                     //key is a reserved word and not accessible as a prop
                     this.props.options.map((option) => <Option key={option} optionText={option}/>)
                 }
@@ -64,11 +84,30 @@ class Option extends React.Component {
     }
 }
 
+
+
 class AddOption extends React.Component {
+    
+    handleAddOption(e) {
+        e.preventDefault();
+    
+        const option = e.target.elements.option.value.trim();
+    
+        if(option){
+            alert(option);
+            // IndecisionApp.options.push(option);
+            // e.target.elements.option.value = '';
+            // ReactDOM.render(<IndecisionApp />, document.getElementById('app'));    
+        }
+    };
+
     render(){
         return (
             <div>
-                Add options comp here
+                <form onSubmit={this.handleAddOption}>
+                    <input type="text" name="option"/> 
+                    <button>Add Option</button>
+                </form>
             </div>
         );
     }
