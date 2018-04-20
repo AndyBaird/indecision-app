@@ -9,6 +9,32 @@ class IndecisionApp extends React.Component {
         options: props.options
       };
     }
+
+    //lifecycle methods
+    componentDidMount(){
+        try {
+            const json = localStorage.getItem('options');
+            const options = JSON.parse(json);
+            if(options){
+                this.setState(() => ({options}));
+            }
+        } catch (error) {
+            //Do nothing at all, catches bad JSON
+        }
+
+
+        
+    }
+    componentDidUpdate(prevProps, prevState){
+        if(prevState.options.length !== this.state.options.length){
+            const json = JSON.stringify(this.state.options);
+            localStorage.setItem('options', json);
+        }
+        
+    }
+    componentWillUnmount(){
+        console.log("component will unmount!");
+    }
     
     handleDeleteOptions() {
         this.setState(() =>({ options: [] }));
@@ -98,6 +124,7 @@ class IndecisionApp extends React.Component {
     return (
         <div>
           <button onClick={props.handleDeleteOptions}>Remove All</button>
+          {props.options.length === 0 && <p>Please add an option to get started</p>}
           {
             props.options.map((option) => (
                 <Option 
@@ -142,6 +169,9 @@ class IndecisionApp extends React.Component {
 
       this.setState(() =>({ error }));
 
+      if(!error){
+          e.target.elements.option.value = '';
+      }
     }
     render() {
       return (
@@ -158,6 +188,7 @@ class IndecisionApp extends React.Component {
 
   //stateless functional component
   //props get passed in as first argument
+  //cannot manage lifecycle
   //you do not have access to "this" but you do have access to props
   //they are faster - use them when you can, especially for presentational content
 //   const User = (props) => {
