@@ -156,6 +156,7 @@ class IndecisionApp extends React.Component {
   class AddOption extends React.Component {
     constructor(props) {
       super(props);
+      //fixes 'this' binding when changing contexts
       this.handleAddOption = this.handleAddOption.bind(this);
       this.state = {
         error: undefined

@@ -17,14 +17,16 @@ class Person {
 
 class Student extends Person {
     constructor(name, age, major) {
+        //super refers to the parent class
         super(name, age);
         this.major = major;
     }
-    //flipping twice to get bool
+    //flipping an empty string twice to get bool of false
     hasMajor() {
         return !!this.major;
     }
     getDescription(){
+        //super refers to the parent class, then we modify it
         let description = super.getDescription();
 
         if(this.hasMajor()){
